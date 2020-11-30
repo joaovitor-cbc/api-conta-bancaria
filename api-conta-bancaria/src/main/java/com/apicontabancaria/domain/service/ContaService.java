@@ -1,6 +1,8 @@
 package com.apicontabancaria.domain.service;
 
 import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.apicontabancaria.domain.model.Cliente;
@@ -9,6 +11,7 @@ import com.apicontabancaria.domain.model.StatusConta;
 import com.apicontabancaria.domain.repository.ClienteRepository;
 import com.apicontabancaria.domain.repository.ContaRepository;
 import com.apicontabancaria.exceptionhandler.NegocioException;
+import com.apicontabancaria.model.ContaModel;
 
 @Service
 public class ContaService {
@@ -18,16 +21,18 @@ public class ContaService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
-	public Conta criarConta(Conta contaInput, Long idCliente) {
-		Conta conta = contaInput;
-		Optional<Cliente> cliente = clienteRepository.findById(idCliente);
-		if (cliente.isEmpty()) {
-			throw new NegocioException("Cliente não cadastrado...");
-		}
-		conta.setCliente(cliente.get());
-		conta.setStatusConta(StatusConta.ABERTO);
-		return contaRepository.save(conta);
+	public ContaModel criarConta(Conta contaInput, Long idCliente) {
+		Cliente cliente = clienteRepository.findById(idCliente)
+				.orElseThrow(() -> new NegocioException("Cliente não encontrado"));
+		ContaModel contaModel = toModelConta(contaInput);
+		contaInput.setCliente(cliente);
+		contaInput.setStatusConta(StatusConta.ABERTO);
+		contaRepository.save(contaInput);
+		return contaModel;
 	}
 
 	public Conta consultarSaldo(Long idConta) {
@@ -78,4 +83,9 @@ public class ContaService {
 	public void excluirConta(Long idConta) {
 		contaRepository.deleteById(idConta);
 	}
+	
+	private ContaModel toModelConta(Conta conta) {
+		return modelMapper.map(conta, ContaModel.class);
+	}
+
 }
