@@ -24,11 +24,6 @@ public class Cliente {
 	@Column(unique = true)
 	private String cpf;
 	
-	@NotNull
-	@Valid
-	@OneToOne
-	private Conta conta;
-	
 	
 	public Cliente(Cliente cliente) {
 		this.cpf = cliente.cpf;
@@ -55,13 +50,6 @@ public class Cliente {
 		this.cpf = cpf;
 	}
 
-	public Conta getConta() {
-		return conta;
-	}
-
-	public void setConta(Conta conta) {
-		this.conta = conta;
-	}
 
 	@Override
 	public int hashCode() {

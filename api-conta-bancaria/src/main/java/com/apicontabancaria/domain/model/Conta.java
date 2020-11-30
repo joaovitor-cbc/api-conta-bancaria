@@ -6,6 +6,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,6 +29,10 @@ public class Conta {
 	@JsonProperty(access = Access.READ_ONLY)
 	@Enumerated(EnumType.STRING)
 	private StatusConta statusConta;
+	
+	@Valid
+	@OneToOne
+	private Cliente cliente;
 		
 	public Conta() {
 	
@@ -67,6 +73,14 @@ public class Conta {
 
 	public void setStatusConta(StatusConta statusConta) {
 		this.statusConta = statusConta;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override
