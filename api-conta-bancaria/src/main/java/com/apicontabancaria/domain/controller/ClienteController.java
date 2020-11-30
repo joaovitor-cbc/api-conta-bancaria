@@ -1,7 +1,5 @@
 package com.apicontabancaria.domain.controller;
 
-
-
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,23 +12,21 @@ import com.apicontabancaria.domain.model.Cliente;
 import com.apicontabancaria.domain.repository.ClienteRepository;
 import com.apicontabancaria.domain.service.ClienteService;
 
-
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
-	
+
 	@Autowired
 	private ClienteService clienteService;
-	
+
 	@Autowired
-	ClienteRepository clienteRepository; 
-	
+	ClienteRepository clienteRepository;
 
 	@PostMapping("/cadastrar-cliente")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Cliente abrirConta(@Valid @RequestBody Cliente clienteInput){
+	public Cliente abrirConta(@Valid @RequestBody Cliente clienteInput) {
 		Cliente cliente = clienteInput;
 		return clienteService.criarCliente(cliente);
 	}
-	
+
 }

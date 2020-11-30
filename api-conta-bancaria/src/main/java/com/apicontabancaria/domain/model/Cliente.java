@@ -1,6 +1,5 @@
 package com.apicontabancaria.domain.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,16 +14,15 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Cliente {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotBlank
 	@Column(unique = true)
 	private String cpf;
-	
-	
+
 	public Cliente(Cliente cliente) {
 		this.cpf = cliente.cpf;
 	}
@@ -32,8 +30,7 @@ public class Cliente {
 	public Cliente() {
 
 	}
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -49,7 +46,6 @@ public class Cliente {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-
 
 	@Override
 	public int hashCode() {

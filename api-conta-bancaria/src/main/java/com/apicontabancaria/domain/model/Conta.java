@@ -15,30 +15,30 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Conta {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotNull
 	private Double saldo;
-	
+
 	@NotBlank
 	private String tipoConta;
-	
+
 	@JsonProperty(access = Access.READ_ONLY)
 	@Enumerated(EnumType.STRING)
 	private StatusConta statusConta;
-	
+
 	@Valid
 	@OneToOne
 	private Cliente cliente;
-		
+
 	public Conta() {
-	
+
 	}
 
-	public Conta( Conta conta) {
+	public Conta(Conta conta) {
 		this.saldo = conta.saldo;
 		this.tipoConta = conta.tipoConta;
 	}

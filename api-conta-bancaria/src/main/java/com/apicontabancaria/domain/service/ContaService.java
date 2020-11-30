@@ -31,20 +31,17 @@ public class ContaService {
 	}
 
 	public Conta consultarSaldo(Long idConta) {
-		Optional<Conta> contaOptional = contaRepository.findById(idConta);
-		if (contaOptional.isEmpty()) {
-			throw new NegocioException("Conta não cadastrada...");
-		}
-		Conta conta = contaOptional.get();
+		Conta conta = contaRepository.findById(idConta)
+				.orElseThrow(() -> new NegocioException("Conta não encontrada..."));
 		return conta;
 	}
 
 	public Conta buscarConta(Long idConta) {
-		Optional<Conta> contaOptional = contaRepository.findById(idConta);
-		if (contaOptional.isEmpty()) {
-			throw new NegocioException("Conta não encontrada...");
+		Conta conta = contaRepository.findById(idConta)
+				.orElseThrow(() -> new NegocioException("Conta não cadastrada..."));
+		if (conta.getStatusConta().equals("FECHADO")) {
+			throw new NegocioException("Conta com status " + conta.getStatusConta());
 		}
-		Conta conta = contaOptional.get();
 		return conta;
 	}
 
@@ -55,6 +52,8 @@ public class ContaService {
 				.orElseThrow(() -> new NegocioException("Conta Destinataria não cadastrada..."));
 		if (valorTranferencia > contaRemetente.getSaldo()) {
 			throw new NegocioException("Saldo insuficiente para fazer tranferencia.");
+		} else if (contaDestinatario.getStatusConta().equals("FECHADO")) {
+			throw new NegocioException("Conta com status " + contaDestinatario.getStatusConta());
 		} else if (valorTranferencia <= contaRemetente.getSaldo()) {
 			Double subtracaoTranferencia = contaRemetente.getSaldo() - valorTranferencia;
 			contaRemetente.setSaldo(subtracaoTranferencia);
@@ -63,5 +62,20 @@ public class ContaService {
 			contaRepository.save(contaRemetente);
 			contaRepository.save(contaDestinatario);
 		}
+	}
+
+	public void deposito(Long idConta, Double valor) {
+		Conta contaDestinatario = contaRepository.findById(idConta)
+				.orElseThrow(() -> new NegocioException("Conta não encontrada.."));
+		if (contaDestinatario.getStatusConta().equals("FECHADO")) {
+			throw new NegocioException("Conta com status " + contaDestinatario.getStatusConta());
+		}
+		Double valorDeposito = contaDestinatario.getSaldo() + valor;
+		contaDestinatario.setSaldo(valorDeposito);
+		contaRepository.save(contaDestinatario);
+	}
+
+	public void excluirConta(Long idConta) {
+		contaRepository.deleteById(idConta);
 	}
 }
