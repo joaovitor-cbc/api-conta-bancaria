@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,5 +43,16 @@ public class ContaController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public Conta abrirConta(@Valid @RequestBody Conta contaInput, @PathVariable Long idCliente){
 		return contaService.criarConta(contaInput, idCliente);
+	}
+	
+	@PutMapping("/tranferencia/{idContaRemetente}/{idContaDestinatario}/{valorTranferencia}")
+	public ResponseEntity<Conta> tranferirDinheiro(@PathVariable Long idContaRemetente,
+			@PathVariable Long idContaDestinatario, @PathVariable Double valorTranferencia) {
+		if(!contaRepository.existsById(idContaRemetente)) {
+			return ResponseEntity.notFound().build();
+		}
+		contaService.Transferencia(valorTranferencia, idContaRemetente, idContaDestinatario);
+		Conta conta = contaService.buscarConta(idContaRemetente);
+		return ResponseEntity.ok(conta);
 	}
 }
