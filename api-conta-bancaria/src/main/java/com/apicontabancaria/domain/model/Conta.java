@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Conta {
@@ -15,23 +18,29 @@ public class Conta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull
 	private Double saldo;
 
+	@NotBlank
 	private String tipoConta;
 
 	@Enumerated(EnumType.STRING)
 	private StatusConta statusConta;
-
+	
+	@Valid
 	@OneToOne
 	private Cliente cliente;
 
 	public Conta() {
 
 	}
-
-	public Conta(Conta conta) {
-		this.saldo = conta.saldo;
-		this.tipoConta = conta.tipoConta;
+	
+	public Conta(Long id, Double saldo, String tipoConta, Cliente cliente) {
+		super();
+		this.id = id;
+		this.saldo = saldo;
+		this.tipoConta = tipoConta;
+		this.cliente = cliente;
 	}
 
 	public Long getId() {

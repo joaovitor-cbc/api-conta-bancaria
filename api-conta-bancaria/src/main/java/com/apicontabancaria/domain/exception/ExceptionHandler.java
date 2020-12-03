@@ -2,7 +2,6 @@ package com.apicontabancaria.domain.exception;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -26,12 +25,10 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private Problema problema;
 
-	private HttpStatus status;
-
 	@org.springframework.web.bind.annotation.ExceptionHandler(NegocioException.class)
 	public ResponseEntity<Object> handleNegocioExcepetion(com.apicontabancaria.exceptionhandler.NegocioException ex,
 			WebRequest request) {
-		status = HttpStatus.BAD_REQUEST;
+		var status = HttpStatus.BAD_REQUEST;
 		problema.setStatus(status.value());
 		problema.setTitulo(ex.getMessage());
 		problema.setDataHora(OffsetDateTime.now());

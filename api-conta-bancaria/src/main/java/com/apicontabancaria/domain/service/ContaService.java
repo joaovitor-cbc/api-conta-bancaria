@@ -1,8 +1,6 @@
 package com.apicontabancaria.domain.service;
 
 import java.util.Optional;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.apicontabancaria.domain.model.Cliente;
@@ -11,7 +9,6 @@ import com.apicontabancaria.domain.model.StatusConta;
 import com.apicontabancaria.domain.repository.ClienteRepository;
 import com.apicontabancaria.domain.repository.ContaRepository;
 import com.apicontabancaria.exceptionhandler.NegocioException;
-import com.apicontabancaria.model.ContaModel;
 
 @Service
 public class ContaService {
@@ -21,18 +18,14 @@ public class ContaService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
-	@Autowired
-	private ModelMapper modelMapper;
 
-	public ContaModel criarConta(Conta contaInput, Long idCliente) {
-		Cliente cliente = clienteRepository.findById(idCliente)
+	public Conta criarConta(Conta contaInput, Long idCliente) {
+		Cliente clienteEntity = clienteRepository.findById(idCliente)
 				.orElseThrow(() -> new NegocioException("Cliente não encontrado"));
-		ContaModel contaModel = toModelConta(contaInput);
-		contaInput.setCliente(cliente);
-		contaInput.setStatusConta(StatusConta.ABERTO);
-		contaRepository.save(contaInput);
-		return contaModel;
+		Conta conta = contaInput;
+		conta.setCliente(clienteEntity);
+		conta.setStatusConta(StatusConta.ABERTO);
+		return contaRepository.save(conta);
 	}
 
 	public Conta consultarSaldo(Long idConta) {
@@ -44,35 +37,41 @@ public class ContaService {
 	public Conta buscarConta(Long idConta) {
 		Conta conta = contaRepository.findById(idConta)
 				.orElseThrow(() -> new NegocioException("Conta não cadastrada..."));
-		if (conta.getStatusConta().equals("FECHADO")) {
+		if (conta.getStatusConta().equals(StatusConta.FECHADA)) {
 			throw new NegocioException("Conta com status " + conta.getStatusConta());
 		}
 		return conta;
 	}
 
 	public void Transferencia(Double valorTranferencia, Long idContaRemetente, Long idContaDestinatario) {
+
 		Conta contaRemetente = contaRepository.findById(idContaRemetente)
 				.orElseThrow(() -> new NegocioException("Conta do remetente não cadastrada..."));
 		Conta contaDestinatario = contaRepository.findById(idContaDestinatario)
 				.orElseThrow(() -> new NegocioException("Conta Destinataria não cadastrada..."));
-		if (valorTranferencia > contaRemetente.getSaldo()) {
+		realizarTransferencia(contaRemetente, contaDestinatario, valorTranferencia);
+	}
+
+	private void realizarTransferencia(Conta remetente, Conta destinatario, Double valor) {
+
+		if (valor > remetente.getSaldo()) {
 			throw new NegocioException("Saldo insuficiente para fazer tranferencia.");
-		} else if (contaDestinatario.getStatusConta().equals("FECHADO")) {
-			throw new NegocioException("Conta com status " + contaDestinatario.getStatusConta());
-		} else if (valorTranferencia <= contaRemetente.getSaldo()) {
-			Double subtracaoTranferencia = contaRemetente.getSaldo() - valorTranferencia;
-			contaRemetente.setSaldo(subtracaoTranferencia);
-			Double adicaoTranferencia = contaDestinatario.getSaldo() + valorTranferencia;
-			contaDestinatario.setSaldo(adicaoTranferencia);
-			contaRepository.save(contaRemetente);
-			contaRepository.save(contaDestinatario);
+		} else if (destinatario.getStatusConta().equals(StatusConta.FECHADA)) {
+			throw new NegocioException("Conta com status " + destinatario.getStatusConta());
+		} else if (remetente.getSaldo() >= valor) {
+			Double subtracaoTranferencia = remetente.getSaldo() - valor;
+			remetente.setSaldo(subtracaoTranferencia);
+			Double adicaoTranferencia = destinatario.getSaldo() + valor;
+			destinatario.setSaldo(adicaoTranferencia);
+			contaRepository.save(remetente);
+			contaRepository.save(destinatario);
 		}
 	}
 
 	public void deposito(Long idConta, Double valor) {
 		Conta contaDestinatario = contaRepository.findById(idConta)
 				.orElseThrow(() -> new NegocioException("Conta não encontrada.."));
-		if (contaDestinatario.getStatusConta().equals("FECHADO")) {
+		if (contaDestinatario.getStatusConta().equals(StatusConta.FECHADA)) {
 			throw new NegocioException("Conta com status " + contaDestinatario.getStatusConta());
 		}
 		Double valorDeposito = contaDestinatario.getSaldo() + valor;
@@ -83,9 +82,13 @@ public class ContaService {
 	public void excluirConta(Long idConta) {
 		contaRepository.deleteById(idConta);
 	}
-	
-	private ContaModel toModelConta(Conta conta) {
-		return modelMapper.map(conta, ContaModel.class);
-	}
 
+	public boolean contaExistePorId(Long idConta) {
+		Optional<Conta> contaOptional = contaRepository.findById(idConta);
+		if (contaOptional.isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
