@@ -10,7 +10,6 @@
 ## Bibliotecas e Frameworks do Projeto
 * Java 11
 * Spring Boot
-* Spring Web
 * Spring Data JPA
 * Jakarta Bean Validation
 * Bean Validation
