@@ -1,0 +1,44 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: teste
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    volumes:
+      - db-data:/var/lib/mysql
+volumes:
+  db-data:
+  
+  version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: prolink
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/lib/postgresql/data 
+    networks:
+      - postgres-network
+      
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+        PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+        PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "6543:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres-network
+networks: 
+    postgres-network:
+        driver: bridge
