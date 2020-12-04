@@ -11,19 +11,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.apicontabancaria.domain.model.Conta;
 import com.apicontabancaria.domain.service.ContaService;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
-@RequestMapping("/conta")
+@RequestMapping("/api/conta")
 public class ContaController {
 
 	@Autowired
 	private ContaService contaService;
-
-	@GetMapping("/consulta-saldo/{idConta}")
+	
+	@ApiResponses(value = {
+		    @ApiResponse(code = 200, message = "Retorna uma conta"),
+		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+		    @ApiResponse(code = 404, message = "Foi gerada uma exceção"),
+		})
+	@RequestMapping(value = "/consulta-saldo/{idConta}\"", method = RequestMethod.GET, produces="application/json")
 	public ResponseEntity<Conta> consultaSaldo(@PathVariable Long idConta) {
 		Conta conta = contaService.consultarSaldo(idConta);
 		if (conta != null) {
@@ -31,14 +40,24 @@ public class ContaController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-
-	@PostMapping("/criar-conta/{idCliente}")
+	
+	@ApiResponses(value = {
+		    @ApiResponse(code = 201, message = "Cria e retorna uma conta"),
+		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+		    @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
+		})
+	@RequestMapping(value = "/criar-conta/{idCliente}", method = RequestMethod.POST, produces="application/json")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public Conta abrirConta(@Valid @RequestBody Conta contaInput, @PathVariable Long idCliente) {
 		return contaService.criarConta(contaInput, idCliente);
 	}
-
-	@PutMapping("/tranferencia/{idContaRemetente}/{idContaDestinatario}/{valorTranferencia}")
+	
+	@ApiResponses(value = {
+		    @ApiResponse(code = 201, message = "Tranferencia de dinheiro"),
+		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+		    @ApiResponse(code = 404, message = "Foi gerada uma exceção"),
+		})
+	@RequestMapping(value = "/tranferencia/{idContaRemetente}/{idContaDestinatario}/{valorTranferencia}", method = RequestMethod.PUT, produces="application/json")
 	public ResponseEntity<Conta> tranferirDinheiro(@PathVariable Long idContaRemetente,
 			@PathVariable Long idContaDestinatario, @PathVariable Double valorTranferencia) {
 		if (!contaService.contaExistePorId(idContaRemetente)) {
@@ -48,8 +67,13 @@ public class ContaController {
 		Conta conta = contaService.buscarConta(idContaRemetente);
 		return ResponseEntity.ok(conta);
 	}
-
-	@PutMapping("/deposito/{idConta}/{valorDeposito}")
+	
+	@ApiResponses(value = {
+		    @ApiResponse(code = 201, message = "Deposita Dinheiro"),
+		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+		    @ApiResponse(code = 404, message = "Foi gerada uma exceção"),
+		})
+	@RequestMapping(value = "/deposito/{idConta}/{valorDeposito}", method = RequestMethod.PUT, produces="application/json")
 	public ResponseEntity<Conta> depositarDinheiro(@PathVariable Long idConta, @PathVariable Double valorDeposito) {
 		if (!contaService.contaExistePorId(idConta)) {
 			return ResponseEntity.notFound().build();
@@ -58,8 +82,13 @@ public class ContaController {
 		Conta conta = contaService.buscarConta(idConta);
 		return ResponseEntity.ok(conta);
 	}
-
-	@DeleteMapping("/apagar-conta/{idConta}")
+	
+	@ApiResponses(value = {
+		    @ApiResponse(code = 204, message = "Apaga uma conta"),
+		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+		    @ApiResponse(code = 404, message = "Foi gerada uma exceção"),
+		})
+	@RequestMapping(value = "/apagar-conta/{idConta}", method = RequestMethod.PUT, produces="application/json")
 	public ResponseEntity<Void> excluirConta(@PathVariable Long idConta) {
 		if (!contaService.contaExistePorId(idConta)) {
 			return ResponseEntity.notFound().build();

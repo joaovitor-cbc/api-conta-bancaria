@@ -7,14 +7,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+
 
 @Entity
 public class Cliente {
-
+	
+	@ApiModelProperty(value = "Código da pessoa")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	 @ApiModelProperty(value = "Cpf da pessoa")
 	@NotNull
 	@Column(unique = true)
 	private String cpf;
