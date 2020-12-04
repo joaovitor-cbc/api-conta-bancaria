@@ -15,6 +15,7 @@
 * Bean Validation
 * flyway Migration
 * MySQL
+* Swagger
 
 ## Diagrama
 ![Diagrama de caso de uso](diagrama.png)
