@@ -1,26 +1,10 @@
-version: '3.3'
-services:
-  mysql:
-    image: mysql:5.7
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: teste
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
-    volumes:
-      - db-data:/var/lib/mysql
-volumes:
-  db-data:
-  
   version: '3'
 
 services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: prolink
+      POSTGRES_PASSWORD: 123
     ports:
       - "5432:5432"
     volumes:
