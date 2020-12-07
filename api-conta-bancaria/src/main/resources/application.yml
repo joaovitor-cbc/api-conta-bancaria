@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL:jdbc:postgresql://localhost:5432/banco}
+    username: ${MYSQL_USER:postgres}
+    password: ${MYSQL_PASSWORD:prolink}

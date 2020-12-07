@@ -18,7 +18,7 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	 @ApiModelProperty(value = "Cpf da pessoa")
+	@ApiModelProperty(value = "Cpf da pessoa")
 	@NotNull
 	@Column(unique = true)
 	private String cpf;
