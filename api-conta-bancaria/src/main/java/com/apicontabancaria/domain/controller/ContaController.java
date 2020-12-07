@@ -88,12 +88,7 @@ public class ContaController {
 		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
 		    @ApiResponse(code = 404, message = "Foi gerada uma exceção"),
 		})
-	/*
-	Corrigir aqui, um enpoint que irar excluir algum dado nunca deve ser outro metodo senão DELETE
-	PUT  atualizar -> criar se não existir
-	Delete deletar -> use esse
-	*/
-	@RequestMapping(value = "/apagar-conta/{idConta}", method = RequestMethod.PUT, produces="application/json")
+	@RequestMapping(value = "/apagar-conta/{idConta}", method = RequestMethod.DELETE, produces="application/json")
 	public ResponseEntity<Void> excluirConta(@PathVariable Long idConta) {
 		if (!contaService.contaExistePorId(idConta)) {
 			return ResponseEntity.notFound().build();
