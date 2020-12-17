@@ -14,7 +14,7 @@
 * Jakarta Bean Validation
 * Bean Validation
 * flyway Migration
-* MySQL
+* PostgreSQL
 * Swagger
 
 ## Diagrama

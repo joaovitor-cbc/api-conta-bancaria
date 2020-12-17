@@ -32,7 +32,7 @@ public class ContaController {
 		    @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
 		    @ApiResponse(code = 404, message = "Foi gerada uma exceção"),
 		})
-	@RequestMapping(value = "/consulta-saldo/{idConta}\"", method = RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = "/consulta-saldo/{idConta}", method = RequestMethod.GET, produces="application/json")
 	public ResponseEntity<Conta> consultaSaldo(@PathVariable Long idConta) {
 		Conta conta = contaService.consultarSaldo(idConta);
 		if (conta != null) {
