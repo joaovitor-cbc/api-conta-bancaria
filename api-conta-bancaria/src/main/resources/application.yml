@@ -1,3 +1,6 @@
+server:
+  error:
+    include-stacktrace: on-param
 spring:
   datasource:
     url: ${MYSQL_URL:jdbc:postgresql://localhost:5432/banco}

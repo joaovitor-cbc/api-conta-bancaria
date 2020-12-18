@@ -1,14 +1,20 @@
 package com.apicontabancaria.domain.service;
 
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.apicontabancaria.domain.model.Cliente;
 import com.apicontabancaria.domain.model.Conta;
 import com.apicontabancaria.domain.model.StatusConta;
 import com.apicontabancaria.domain.repository.ClienteRepository;
 import com.apicontabancaria.domain.repository.ContaRepository;
 import com.apicontabancaria.exceptionhandler.NegocioException;
+import com.apicontabancaria.request.DadosDeposito;
+import com.apicontabancaria.request.DadosTransferencia;
 
 @Service
 public class ContaService {
@@ -30,7 +36,7 @@ public class ContaService {
 
 	public Conta consultarSaldo(Long idConta) {
 		Conta conta = contaRepository.findById(idConta)
-				.orElseThrow(() -> new NegocioException("Conta não encontrada..."));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada..."));
 		return conta;
 	}
 
@@ -43,13 +49,16 @@ public class ContaService {
 		return conta;
 	}
 
-	public void Transferencia(Double valorTranferencia, Long idContaRemetente, Long idContaDestinatario) {
-
-		Conta contaRemetente = contaRepository.findById(idContaRemetente)
-				.orElseThrow(() -> new NegocioException("Conta do remetente não cadastrada..."));
-		Conta contaDestinatario = contaRepository.findById(idContaDestinatario)
-				.orElseThrow(() -> new NegocioException("Conta Destinataria não cadastrada..."));
-		realizarTransferencia(contaRemetente, contaDestinatario, valorTranferencia);
+	public void Transferencia(DadosTransferencia dadosTransferencia) {
+		if (dadosTransferencia.getIdContaRemetente() == null || dadosTransferencia.getIdContaDestinatario() == null
+				|| dadosTransferencia.getValorTranferencia() == null) {
+			throw new NegocioException("há campos vazios, necessario preencher todos os campos!");
+		}
+		Conta contaRemetente = contaRepository.findById(dadosTransferencia.getIdContaRemetente()).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta remetente não cadastrada..."));
+		Conta contaDestinatario = contaRepository.findById(dadosTransferencia.getIdContaDestinatario()).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta destinataria não cadastrada..."));
+		realizarTransferencia(contaRemetente, contaDestinatario, dadosTransferencia.getValorTranferencia());
 	}
 
 	private void realizarTransferencia(Conta remetente, Conta destinatario, Double valor) {
@@ -68,18 +77,24 @@ public class ContaService {
 		}
 	}
 
-	public void deposito(Long idConta, Double valor) {
-		Conta contaDestinatario = contaRepository.findById(idConta)
-				.orElseThrow(() -> new NegocioException("Conta não encontrada.."));
+	public void deposito(DadosDeposito dadosDeposito) {
+		if (dadosDeposito.getIdConta() == null || dadosDeposito.getValorDeposito() == null) {
+			throw new NegocioException("há campos vazios, necessario preencher todos os campos!");
+		}
+		Conta contaDestinatario = contaRepository.findById(dadosDeposito.getIdConta())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada..."));
 		if (contaDestinatario.getStatusConta().equals(StatusConta.FECHADA)) {
 			throw new NegocioException("Conta com status " + contaDestinatario.getStatusConta());
 		}
-		Double valorDeposito = contaDestinatario.getSaldo() + valor;
+		Double valorDeposito = contaDestinatario.getSaldo() + dadosDeposito.getValorDeposito();
 		contaDestinatario.setSaldo(valorDeposito);
 		contaRepository.save(contaDestinatario);
 	}
 
 	public void excluirConta(Long idConta) {
+		if (!contaExistePorId(idConta)) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada...");
+		}
 		contaRepository.deleteById(idConta);
 	}
 

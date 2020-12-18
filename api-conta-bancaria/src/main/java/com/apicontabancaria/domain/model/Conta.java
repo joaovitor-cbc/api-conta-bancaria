@@ -15,24 +15,24 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Conta {
-	
+
 	@ApiModelProperty(value = "Código da pessoa")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ApiModelProperty(value = "Saldo da conta")
 	@NotNull
 	private Double saldo;
-	
+
 	@ApiModelProperty(value = "tipo da conta")
 	@NotBlank
 	private String tipoConta;
-	
+
 	@ApiModelProperty(value = "Status da conta")
 	@Enumerated(EnumType.STRING)
 	private StatusConta statusConta;
-	
+
 	@Valid
 	@OneToOne
 	private Cliente cliente;
@@ -40,7 +40,7 @@ public class Conta {
 	public Conta() {
 
 	}
-	
+
 	public Conta(Long id, Double saldo, String tipoConta, Cliente cliente) {
 		super();
 		this.id = id;
