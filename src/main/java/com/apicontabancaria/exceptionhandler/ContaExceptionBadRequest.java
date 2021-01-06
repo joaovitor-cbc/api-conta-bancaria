@@ -1,13 +1,13 @@
 package com.apicontabancaria.exceptionhandler;
 
-public class NegocioException extends RuntimeException {
+public class ContaExceptionBadRequest extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public NegocioException(String message) {
+	public ContaExceptionBadRequest(String message) {
 		super(message);
 	}
 }

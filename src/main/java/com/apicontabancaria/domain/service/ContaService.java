@@ -3,16 +3,16 @@ package com.apicontabancaria.domain.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.apicontabancaria.domain.model.Cliente;
 import com.apicontabancaria.domain.model.Conta;
 import com.apicontabancaria.domain.model.StatusConta;
 import com.apicontabancaria.domain.repository.ClienteRepository;
 import com.apicontabancaria.domain.repository.ContaRepository;
-import com.apicontabancaria.exceptionhandler.NegocioException;
+import com.apicontabancaria.exceptionhandler.ClienteExceptionNotFound;
+import com.apicontabancaria.exceptionhandler.ContaExceptionBadRequest;
+import com.apicontabancaria.exceptionhandler.ContaExceptionNotFound;
 import com.apicontabancaria.request.DadosDeposito;
 import com.apicontabancaria.request.DadosTransferencia;
 
@@ -26,25 +26,29 @@ public class ContaService {
 	private ClienteRepository clienteRepository;
 
 	public Conta criarConta(Conta contaInput, Long idCliente) {
+		return validarAberturaConta(contaInput, idCliente);
+	}
+
+	private Conta validarAberturaConta(Conta contaInput, Long idCliente) {
 		Cliente clienteEntity = clienteRepository.findById(idCliente)
-				.orElseThrow(() -> new NegocioException("Cliente não encontrado"));
-		Conta conta = contaInput;
-		conta.setCliente(clienteEntity);
-		conta.setStatusConta(StatusConta.ABERTO);
-		return contaRepository.save(conta);
+				.orElseThrow(() -> new ClienteExceptionNotFound("Cliente não encontrado"));
+			Conta conta = contaInput;
+			conta.setCliente(clienteEntity);
+			conta.setStatusConta(StatusConta.ABERTO);
+			return contaRepository.save(conta);
 	}
 
 	public Conta consultarSaldo(Long idConta) {
 		Conta conta = contaRepository.findById(idConta)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada..."));
+				.orElseThrow(() -> new ContaExceptionNotFound("Conta não encontrada..."));
 		return conta;
 	}
 
 	public Conta buscarConta(Long idConta) {
 		Conta conta = contaRepository.findById(idConta)
-				.orElseThrow(() -> new NegocioException("Conta não cadastrada..."));
+				.orElseThrow(() -> new ContaExceptionBadRequest("Conta não cadastrada..."));
 		if (conta.getStatusConta().equals(StatusConta.FECHADA)) {
-			throw new NegocioException("Conta com status " + conta.getStatusConta());
+			throw new ContaExceptionBadRequest("Conta com status " + conta.getStatusConta());
 		}
 		return conta;
 	}
@@ -52,21 +56,21 @@ public class ContaService {
 	public void Transferencia(DadosTransferencia dadosTransferencia) {
 		if (dadosTransferencia.getIdContaRemetente() == null || dadosTransferencia.getIdContaDestinatario() == null
 				|| dadosTransferencia.getValorTranferencia() == null) {
-			throw new NegocioException("há campos vazios, necessario preencher todos os campos!");
+			throw new ContaExceptionBadRequest("há campos vazios, necessario preencher todos os campos!");
 		}
-		Conta contaRemetente = contaRepository.findById(dadosTransferencia.getIdContaRemetente()).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta remetente não cadastrada..."));
-		Conta contaDestinatario = contaRepository.findById(dadosTransferencia.getIdContaDestinatario()).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta destinataria não cadastrada..."));
+		Conta contaRemetente = contaRepository.findById(dadosTransferencia.getIdContaRemetente())
+				.orElseThrow(() -> new ContaExceptionNotFound("Conta remetente não cadastrada..."));
+		Conta contaDestinatario = contaRepository.findById(dadosTransferencia.getIdContaDestinatario())
+				.orElseThrow(() -> new ContaExceptionNotFound("Conta destinataria não cadastrada..."));
 		realizarTransferencia(contaRemetente, contaDestinatario, dadosTransferencia.getValorTranferencia());
 	}
 
 	private void realizarTransferencia(Conta remetente, Conta destinatario, Double valor) {
 
 		if (valor > remetente.getSaldo()) {
-			throw new NegocioException("Saldo insuficiente para fazer tranferencia.");
+			throw new ContaExceptionBadRequest("Saldo insuficiente para fazer tranferencia.");
 		} else if (destinatario.getStatusConta().equals(StatusConta.FECHADA)) {
-			throw new NegocioException("Conta com status " + destinatario.getStatusConta());
+			throw new ContaExceptionBadRequest("Conta com status " + destinatario.getStatusConta());
 		} else if (remetente.getSaldo() >= valor) {
 			Double subtracaoTranferencia = remetente.getSaldo() - valor;
 			remetente.setSaldo(subtracaoTranferencia);
@@ -79,12 +83,12 @@ public class ContaService {
 
 	public void deposito(DadosDeposito dadosDeposito) {
 		if (dadosDeposito.getIdConta() == null || dadosDeposito.getValorDeposito() == null) {
-			throw new NegocioException("há campos vazios, necessario preencher todos os campos!");
+			throw new ContaExceptionBadRequest("há campos vazios, necessario preencher todos os campos!");
 		}
 		Conta contaDestinatario = contaRepository.findById(dadosDeposito.getIdConta())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada..."));
+				.orElseThrow(() -> new ContaExceptionNotFound("Conta não encontrada..."));
 		if (contaDestinatario.getStatusConta().equals(StatusConta.FECHADA)) {
-			throw new NegocioException("Conta com status " + contaDestinatario.getStatusConta());
+			throw new ContaExceptionBadRequest("Conta com status " + contaDestinatario.getStatusConta());
 		}
 		Double valorDeposito = contaDestinatario.getSaldo() + dadosDeposito.getValorDeposito();
 		contaDestinatario.setSaldo(valorDeposito);
@@ -92,10 +96,9 @@ public class ContaService {
 	}
 
 	public void excluirConta(Long idConta) {
-		if (!contaExistePorId(idConta)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada...");
+		if (contaExistePorId(idConta)) {
+			contaRepository.deleteById(idConta);
 		}
-		contaRepository.deleteById(idConta);
 	}
 
 	public boolean contaExistePorId(Long idConta) {
@@ -103,7 +106,7 @@ public class ContaService {
 		if (contaOptional.isPresent()) {
 			return true;
 		} else {
-			return false;
+			throw new ContaExceptionNotFound("Conta não encontrada...");
 		}
 	}
 }

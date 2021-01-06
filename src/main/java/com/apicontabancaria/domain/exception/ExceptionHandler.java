@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.apicontabancaria.exceptionhandler.NegocioException;
+import com.apicontabancaria.exceptionhandler.ClienteExceptionBadRequest;
+import com.apicontabancaria.exceptionhandler.ClienteExceptionNotFound;
+import com.apicontabancaria.exceptionhandler.ContaExceptionBadRequest;
+import com.apicontabancaria.exceptionhandler.ContaExceptionNotFound;
 
 @ControllerAdvice
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,10 +30,40 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private Problema problema;
 
-	@org.springframework.web.bind.annotation.ExceptionHandler(NegocioException.class)
-	public ResponseEntity<Object> handleNegocioExcepetion(com.apicontabancaria.exceptionhandler.NegocioException ex,
-			WebRequest request) {
+	@org.springframework.web.bind.annotation.ExceptionHandler(ContaExceptionBadRequest.class)
+	public ResponseEntity<Object> handleContaExceptionBadRequest(
+			com.apicontabancaria.exceptionhandler.ContaExceptionBadRequest ex, WebRequest request) {
 		var status = HttpStatus.BAD_REQUEST;
+		problema.setStatus(status.value());
+		problema.setTitulo(ex.getMessage());
+		problema.setDataHora(OffsetDateTime.now());
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+	@org.springframework.web.bind.annotation.ExceptionHandler(ContaExceptionNotFound.class)
+	public ResponseEntity<Object> handleContaExceptionNotFound(
+			com.apicontabancaria.exceptionhandler.ContaExceptionNotFound ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
+		problema.setStatus(status.value());
+		problema.setTitulo(ex.getMessage());
+		problema.setDataHora(OffsetDateTime.now());
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+	@org.springframework.web.bind.annotation.ExceptionHandler(ClienteExceptionBadRequest.class)
+	public ResponseEntity<Object> handleClienteExceptionBadRequest(
+			com.apicontabancaria.exceptionhandler.ClienteExceptionBadRequest ex, WebRequest request) {
+		var status = HttpStatus.BAD_REQUEST;
+		problema.setStatus(status.value());
+		problema.setTitulo(ex.getMessage());
+		problema.setDataHora(OffsetDateTime.now());
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+	@org.springframework.web.bind.annotation.ExceptionHandler(ClienteExceptionNotFound.class)
+	public ResponseEntity<Object> handleClienteExceptionNotFound(
+			com.apicontabancaria.exceptionhandler.ClienteExceptionNotFound ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
 		problema.setStatus(status.value());
 		problema.setTitulo(ex.getMessage());
 		problema.setDataHora(OffsetDateTime.now());

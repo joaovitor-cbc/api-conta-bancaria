@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.apicontabancaria.domain.model.Cliente;
 import com.apicontabancaria.domain.repository.ClienteRepository;
-import com.apicontabancaria.exceptionhandler.NegocioException;
+import com.apicontabancaria.exceptionhandler.ClienteExceptionBadRequest;
 
 @Service
 public class ClienteService {
@@ -19,7 +19,7 @@ public class ClienteService {
 		Cliente clienteEntity = cliente;
 		Optional<Cliente> clienteOptinal = clienteRepository.findByCpf(clienteEntity.getCpf());
 		if (clienteOptinal.isPresent()) {
-			throw new NegocioException("Cliente já cadastrado...");
+			throw new ClienteExceptionBadRequest("Cliente já cadastrado...");
 		}
 		return clienteRepository.save(clienteEntity);
 	}
