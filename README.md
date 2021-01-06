@@ -12,7 +12,7 @@
 * Spring Boot
 * Spring Data JPA
 * Jakarta Bean Validation
-* Bean Validation
+* Hibernate Validator
 * flyway Migration
 * PostgreSQL
 * Swagger
