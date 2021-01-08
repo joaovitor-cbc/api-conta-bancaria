@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.apicontabancaria.domain.model.Cliente;
 import com.apicontabancaria.domain.model.Conta;
@@ -64,7 +65,8 @@ public class ContaService {
 				.orElseThrow(() -> new ContaExceptionNotFound("Conta destinataria não cadastrada..."));
 		realizarTransferencia(contaRemetente, contaDestinatario, dadosTransferencia.getValorTranferencia());
 	}
-
+	
+	@Transactional
 	private void realizarTransferencia(Conta remetente, Conta destinatario, Double valor) {
 
 		if (valor > remetente.getSaldo()) {
