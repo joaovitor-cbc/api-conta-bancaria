@@ -1,25 +1,55 @@
-# api-conta-bancaria
-* Api de conta bancária, este projeto simula contas criadas ficticiamente, para que  api seja consumida para testes ou estudos.
+<h2 align="center">
+  <p>api conta bancária</p>
+</h2>
 
-## A quem se destina / Objetivo
-*	Este projeto é para fins de estudos.
+<h2>🧾 Sobre</h2>
+<p>Através dessa api será possivel criar uma conta fictícia, consultar o saldo, fazer transferencia e fazer depósito</p>
 
-## Resumo do projeto
-* Lógica do programa 
-  * Através dessa api será possivel criar uma conta ficticia, consultar o saldo, fazer transferencia e fazer depositos
-## Bibliotecas e Frameworks do Projeto
-* Java 11
-* Spring Boot
-* Spring Data JPA
-* Jakarta Bean Validation
-* Hibernate Validator
-* flyway Migration
-* PostgreSQL
-* Swagger
+<h3>Projeto no Heruko</h3>
+<a href="https://api-conta-bancaria.herokuapp.com/swagger-ui.html">Documentação do projeto</a>
+
+<h2>🔧 Ferramentas</h2>
+<ul>
+    <li>
+    <a href="https://www.oracle.com/br/java/technologies/javase-jdk11-downloads.html">Java 11</a>
+    </li>
+    <li>
+    <a href="https://spring.io/projects/spring-boot">Spring Boot</a>
+    </li>
+    <li>
+    <a href="https://spring.io/projects/spring-data-jpa">Spring Data JPA</a>
+    </li>
+    <li>
+    <a href="https://beanvalidation.org/">Jakarta Bean Validation</a>
+    </li>
+    <li>
+    <a href="https://hibernate.org/validator/documentation/getting-started/">Hibernate Validator</a>
+    </li>
+    <li>
+    <a href="https://flywaydb.org/">flyway Migration</a>
+    </li>
+    <li>
+    <a href="https://www.postgresql.org/">PostgreSQL</a>
+    </li>
+    <li>
+    <a href="https://www.docker.com/">Docker</a>
+    </li> 
+    <li>
+    <a href="https://swagger.io/">Swagger</a>
+    </li>       
+</ul>
+
+<h2>👨‍💻 Como configurar</h2>
+
+```bash
+  # Clone o projeto
+  $ git clone https://github.com/joaovitor-cbc/consumidor-api-viacep
+```
 
 ## Diagrama
 ![Diagrama de caso de uso](diagrama.png)
 
-## Sobre o autor
-* João Vitor
-* [Linkedin](https://www.linkedin.com/in/jo%C3%A3o-vitor-ara%C3%BAjo-266572173/)
+<p>Você pode pegar todos os arquivos deste repositório e executá-los no seu computador como se estivessem online, apenas na sua máquina.</a>
+
+
+<p align="center">Feito por<a href="https://www.linkedin.com/in/joão-vitor-araujo"> João Vitor</a></p>
