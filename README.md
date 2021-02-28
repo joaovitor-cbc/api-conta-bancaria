@@ -3,9 +3,9 @@
 </h2>
 
 <h2>🧾 Sobre</h2>
-<p>Através dessa api será possivel criar uma conta fictícia, consultar o saldo, fazer transferencia e fazer depósito</p>
+<p>Através dessa api será possivel criar uma conta fictícia, consultar o saldo, fazer transferencia e fazer depósito.</p>
 
-<h3>Projeto no Heruko</h3>
+<h3>Projeto no Heroku</h3>
 <a href="https://api-conta-bancaria.herokuapp.com/swagger-ui.html">Documentação do projeto</a>
 
 <h2>🔧 Ferramentas</h2>
@@ -45,11 +45,10 @@
   # Clone o projeto
   $ git clone https://github.com/joaovitor-cbc/consumidor-api-viacep
 ```
+<p>Você pode pegar todos os arquivos deste repositório e executá-los no seu computador como se estivessem online, apenas na sua máquina.</a>
 
 ## Diagrama
 ![Diagrama de caso de uso](diagrama.png)
-
-<p>Você pode pegar todos os arquivos deste repositório e executá-los no seu computador como se estivessem online, apenas na sua máquina.</a>
 
 
 <p align="center">Feito por<a href="https://www.linkedin.com/in/joão-vitor-araujo"> João Vitor</a></p>
