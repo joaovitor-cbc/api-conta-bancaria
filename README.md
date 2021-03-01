@@ -43,7 +43,7 @@
 
 ```bash
   # Clone o projeto
-  $ git clone https://github.com/joaovitor-cbc/consumidor-api-viacep
+  $ git clone https://github.com/joaovitor-cbc/api-conta-bancaria
 ```
 <p>Você pode pegar todos os arquivos deste repositório e executá-los no seu computador como se estivessem online, apenas na sua máquina.</a>
 
