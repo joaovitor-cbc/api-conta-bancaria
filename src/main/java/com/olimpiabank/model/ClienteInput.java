@@ -1,0 +1,29 @@
+package com.olimpiabank.model;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+public class ClienteInput {
+
+    @NotBlank
+    private String nome;
+
+    @NotBlank
+    private String cpf;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+}

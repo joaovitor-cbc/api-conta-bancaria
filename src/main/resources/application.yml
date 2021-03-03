@@ -3,6 +3,6 @@ server:
     include-stacktrace: on-param
 spring:
   datasource:
-    url: ${MYSQL_URL:jdbc:postgresql://localhost:5432/banco}
+    url: ${MYSQL_URL:jdbc:postgresql://localhost:5432/olimpiabank}
     username: ${MYSQL_USER:postgres}
     password: ${MYSQL_PASSWORD:admin}
