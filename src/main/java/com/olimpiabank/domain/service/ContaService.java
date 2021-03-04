@@ -31,28 +31,17 @@ public class ContaService {
 		return validarAberturaConta(contaInput, idCliente);
 	}
 
-	private Conta validarAberturaConta(Conta contaInput, Long idCliente) {
+		private Conta validarAberturaConta(Conta contaInput, Long idCliente) {
 		Cliente clienteEntity =  validarCliente(idCliente);
-		possuiContaAtiva(contaInput);
+		possuiContaAtiva(clienteEntity);
 		Conta conta = contaInput;
 		conta.setCliente(clienteEntity);
-		conta.setStatusConta(StatusConta.ABERTO);
 		return contaRepository.save(conta);
 	}
 
-	private void possuiContaAtiva(Conta contaInput){
-		Optional<Cliente> cliente = Optional.ofNullable(contaInput.getCliente());
-		String clienteCpf = cliente.get().getCpf();
-		Optional<Cliente> clienteExisteCpf = clienteRepository.findByCpf(clienteCpf);
-		if(cliente.isEmpty()){
-			throw new ClienteExceptionNotFound("cliente não cadastrado...");
-		} else{
-			Optional<Conta> contaDoCliente = Optional.ofNullable(cliente.get().getConta());
-			Long idContaDoCliente = contaDoCliente.get().getId();
-			Optional<Conta> contaExistente = contaRepository.findById(idContaDoCliente);
-			if(contaExistente.isPresent()){
-				throw new ContaExceptionBadRequest("Cliente já possui conta");
-			}
+	private void possuiContaAtiva(Cliente cliente){
+		if(cliente.getConta() != null && cliente.getConta().getStatusConta().equals(StatusConta.ABERTO)) {
+			throw new ContaExceptionBadRequest("Cliente já possui conta ativa");
 		}
 	}
 
