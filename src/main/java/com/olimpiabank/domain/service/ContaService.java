@@ -2,6 +2,7 @@ package com.olimpiabank.domain.service;
 
 import java.util.Optional;
 
+import ch.qos.logback.core.net.server.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,14 +41,18 @@ public class ContaService {
 	}
 
 	private void possuiContaAtiva(Conta contaInput){
-        Optional<Long> idClienteInput = Optional.ofNullable(contaInput.getCliente().getId());
-        Optional<Optional<Cliente>> clienteExistente = Optional.ofNullable(clienteRepository.findById(idClienteInput.get()));
-        Conta contaClienteExistente = clienteExistente.get().get().getConta();
-        Long idClienteExistente = clienteExistente.get().get().getId();
-         if(idClienteInput.equals(idClienteExistente)){
-			if(contaClienteExistente.getStatusConta().equals(StatusConta.ABERTO)){
+		Cliente cliente = contaInput.getCliente();
+		Optional<Optional<Cliente>> clienteExisteCpf = Optional.ofNullable(clienteRepository.findByCpf(cliente.getCpf()));
+		if(clienteExisteCpf.get().isEmpty() || clienteExisteCpf.get().equals(null)){
+			throw new ClienteExceptionNotFound("cliente não encontrado...");
+		} else if(cliente.getCpf().equals(clienteExisteCpf)){
+			Optional<Conta> contaDoCliente = Optional.ofNullable(cliente.getConta());
+			Long idContaDoCliente = contaDoCliente.get().getId();
+			Optional<Optional<Conta>> contaExistente = Optional.ofNullable(contaRepository.findById(idContaDoCliente));
+			if(contaExistente.isPresent()){
 				throw new ContaExceptionBadRequest("Cliente já possui conta");
 			}
+
 		}
 	}
 
