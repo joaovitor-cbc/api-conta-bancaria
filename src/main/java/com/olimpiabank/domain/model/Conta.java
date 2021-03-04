@@ -31,7 +31,7 @@ public class Conta {
 
 	@ApiModelProperty(value = "Status da conta")
 	@Enumerated(EnumType.STRING)
-	private StatusConta statusConta;
+	private StatusConta statusConta = StatusConta.ABERTO;
 
 	@Valid
 	@OneToOne
