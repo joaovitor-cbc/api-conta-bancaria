@@ -41,18 +41,18 @@ public class ContaService {
 	}
 
 	private void possuiContaAtiva(Conta contaInput){
-		Cliente cliente = contaInput.getCliente();
-		Optional<Optional<Cliente>> clienteExisteCpf = Optional.ofNullable(clienteRepository.findByCpf(cliente.getCpf()));
-		if(clienteExisteCpf.get().isEmpty() || clienteExisteCpf.get().equals(null)){
-			throw new ClienteExceptionNotFound("cliente não encontrado...");
-		} else if(cliente.getCpf().equals(clienteExisteCpf)){
-			Optional<Conta> contaDoCliente = Optional.ofNullable(cliente.getConta());
+		Optional<Cliente> cliente = Optional.ofNullable(contaInput.getCliente());
+		String clienteCpf = cliente.get().getCpf();
+		Optional<Cliente> clienteExisteCpf = clienteRepository.findByCpf(clienteCpf);
+		if(cliente.isEmpty()){
+			throw new ClienteExceptionNotFound("cliente não cadastrado...");
+		} else{
+			Optional<Conta> contaDoCliente = Optional.ofNullable(cliente.get().getConta());
 			Long idContaDoCliente = contaDoCliente.get().getId();
-			Optional<Optional<Conta>> contaExistente = Optional.ofNullable(contaRepository.findById(idContaDoCliente));
+			Optional<Conta> contaExistente = contaRepository.findById(idContaDoCliente);
 			if(contaExistente.isPresent()){
 				throw new ContaExceptionBadRequest("Cliente já possui conta");
 			}
-
 		}
 	}
 
