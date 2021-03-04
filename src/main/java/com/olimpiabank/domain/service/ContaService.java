@@ -32,21 +32,21 @@ public class ContaService {
 
 	private Conta validarAberturaConta(Conta contaInput, Long idCliente) {
 		Cliente clienteEntity =  validarCliente(idCliente);
-		//possuiContaAtiva(idCliente);
+		possuiContaAtiva(contaInput);
 		Conta conta = contaInput;
 		conta.setCliente(clienteEntity);
 		conta.setStatusConta(StatusConta.ABERTO);
 		return contaRepository.save(conta);
 	}
 
-	private void possuiContaAtiva(Long idCliente){
-		Optional<Cliente> clienteEntity = clienteRepository.findById(idCliente);
-		Long idConta = clienteEntity.get().getConta().getId();
-		Optional<Conta> optionalConta = contaRepository.findById(idConta);
-		if(optionalConta.isPresent()){
-			if(optionalConta.get().getStatusConta().equals(StatusConta.ABERTO)){
-				throw new ContaExceptionBadRequest("Cliente já possui conta"
-						+optionalConta.get().getStatusConta());
+	private void possuiContaAtiva(Conta contaInput){
+        Optional<Long> idClienteInput = Optional.ofNullable(contaInput.getCliente().getId());
+        Optional<Optional<Cliente>> clienteExistente = Optional.ofNullable(clienteRepository.findById(idClienteInput.get()));
+        Conta contaClienteExistente = clienteExistente.get().get().getConta();
+        Long idClienteExistente = clienteExistente.get().get().getId();
+         if(idClienteInput.equals(idClienteExistente)){
+			if(contaClienteExistente.getStatusConta().equals(StatusConta.ABERTO)){
+				throw new ContaExceptionBadRequest("Cliente já possui conta");
 			}
 		}
 	}
