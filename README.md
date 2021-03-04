@@ -40,13 +40,24 @@
 </ul>
 
 <h2>👨‍💻 Como configurar</h2>
-
 ```bash
   # Clone o projeto
   $ git clone https://github.com/joaovitor-cbc/api-conta-bancaria
+  #Execute o docker-compose para subir o postgres e o pgAdmin
+  $ docker-compose up -d
 ```
 <p>Você pode pegar todos os arquivos deste repositório e executá-los no seu computador como se estivessem online, apenas na sua máquina.</a>
-
+<p>Dicas de acesso</p>
+<ul>
+    <li><a href="http://localhost:8080/swagger-ui.html">Documentação do Swagger</a>
+    </li>
+    <li>Configurações de acesso ao banco-> </br>
+        <i>[ host=<b>localhost:5432</b>, usuario=<b>postgres</b>, senha=<b>admin</b>, database=<b>olimpiabank</b> ]</i>
+    </li>
+    <li><a href="htto://localhost:6543">PgAdmin</a> </br>
+        <i>[Usuario= <b>admin@admin.com</b>,Senha= <b>admin</b>] </i>
+    </li>
+</ul>
 ## Diagrama
 ![Diagrama de caso de uso](diagrama.png)
 
