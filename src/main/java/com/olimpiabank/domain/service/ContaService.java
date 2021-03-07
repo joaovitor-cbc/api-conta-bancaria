@@ -31,9 +31,6 @@ public class ContaService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 
-	@Autowired
-    private ModelMapper modelMapper;
-
     /**
      * <h2>Metodo para criar uma conta.</h2>
      * <p> Recebe por parametro contaInput, idCliente,

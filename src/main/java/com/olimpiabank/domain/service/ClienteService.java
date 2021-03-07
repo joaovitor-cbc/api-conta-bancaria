@@ -17,9 +17,6 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 
-	@Autowired
-	private ModelMapper modelMapper;
-
 	/**
 	 * <h2>Metodo para criar Cliente.</h2>
 	 * <p> Recebe por parametro clienteInput e retorna Cliente.</p>

@@ -11,5 +11,4 @@ class OlimpiaBankApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
