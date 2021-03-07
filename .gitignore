@@ -33,5 +33,6 @@ build/
 .vscode/
 
 ### project ###
-mvnw
-mvnw.cmd
+*mvnw
+*mvnw.cmd
+*system.properties
