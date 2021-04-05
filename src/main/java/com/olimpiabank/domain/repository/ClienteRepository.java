@@ -1,11 +1,10 @@
 package com.olimpiabank.domain.repository;
 
-import java.util.Optional;
-
+import com.olimpiabank.domain.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.olimpiabank.domain.model.Cliente;
+import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {

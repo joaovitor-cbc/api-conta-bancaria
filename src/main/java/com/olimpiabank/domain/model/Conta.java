@@ -2,26 +2,17 @@ package com.olimpiabank.domain.model;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Conta {
 
-	@ApiModelProperty(value = "id da conta")
 	@Id
 	private Long id;
 
-	@ApiModelProperty(value = "Saldo da conta")
-	@NotNull
 	private Double saldo;
 
-	@ApiModelProperty(value = "tipo da conta")
 	private String tipoConta;
 
-	@ApiModelProperty(value = "Status da conta")
 	@Enumerated(EnumType.STRING)
 	private StatusConta statusConta;
 

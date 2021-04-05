@@ -1,24 +1,16 @@
 package com.olimpiabank.domain.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-
-import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Cliente {
 
-	@ApiModelProperty(value = "id do cliente.")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ApiModelProperty(value = "Nome do cliente.")
-	@NotBlank
 	private String nome;
 
-	@ApiModelProperty(value = "Cpf do cliente.")
-	@NotBlank
 	@Column(unique = true)
 	private String cpf;
 

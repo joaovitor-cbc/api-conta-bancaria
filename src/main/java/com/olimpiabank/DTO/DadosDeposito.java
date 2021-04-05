@@ -1,4 +1,4 @@
-package com.olimpiabank.request;
+package com.olimpiabank.DTO;
 
 public class DadosDeposito {
 
